@@ -11,151 +11,152 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
-  List<BoardingModel> itemsShow = [
-    BoardingModel(
-        'assets/images/one.jpeg', 'Boarding Title One', 'subtitle One'),
-    BoardingModel(
-        'assets/images/two.jpeg', 'Boarding Title Two', 'subtitle two'),
-    BoardingModel(
-        'assets/images/three.jpeg', 'Boarding Title Three', 'subtitle three'),
-  ];
-
   final PageController _pageController = PageController();
-
-  bool isBoardingReverse = true;
+  List<BoardingModel> itemData = <BoardingModel>[
+    BoardingModel('assets/images/one.jpeg', 'On Boarding Title One',
+        'On subBoarding Title One'),
+    BoardingModel('assets/images/one.jpeg', 'On Boarding Title two',
+        'On subBoarding Title two'),
+    BoardingModel('assets/images/one.jpeg', 'On Boarding Title three',
+        'On subBoarding Title three'),
+  ];
   bool isLast = false;
-  int currentImage = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          TextButton(
+          defaultTextButton(
             onPressed: () {
               navigateReplacement(
                 context: context,
                 screen: ShopLoginScreen(),
               );
             },
-            child: Text(
-              'SKIP',
+            labelText: 'SKIP',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: defaultColor,
             ),
           ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
+            SizedBox(height: 40.0,),
             Expanded(
               child: PageView.builder(
-                onPageChanged: (int currentIndex) {
-                  if (currentIndex == itemsShow.length - 1) {
+                onPageChanged: (int index) {
+                  if (index == itemData.length - 1) {
                     setState(() {
                       isLast = true;
+                      print('lasting');
                     });
-                    print('last');
                   } else {
-                    print('first');
                     setState(() {
                       isLast = false;
+                      print('not last');
                     });
                   }
                 },
                 itemBuilder: (BuildContext context, int index) {
-                  return buildBoardingItem(
-                    model: itemsShow[index],
+                  return _buildItemDesign(
+                    context: context,
+                    dataModel: itemData[index],
                   );
                 },
-                physics: BouncingScrollPhysics(),
                 controller: _pageController,
-                scrollDirection: Axis.horizontal,
-                itemCount: itemsShow.length,
+                itemCount: itemData.length,
+                physics: BouncingScrollPhysics(),
               ),
-            ),
-            SizedBox(
-              height: 40.0,
             ),
             Row(
               children: [
-                SmoothPageIndicator(
-                  controller: _pageController,
-                  count: itemsShow.length,
-                  effect: ExpandingDotsEffect(
-                    dotColor: Colors.grey,
-                    activeDotColor: defaultColor,
-                    spacing: 5.0,
-                    dotWidth: 10.0,
-                    dotHeight: 10.0,
-                  ),
-                ),
+                _buildIndicator(),
                 Spacer(),
-                FloatingActionButton(
+                FloatingActionButton.extended(
                   onPressed: () {
                     if (isLast) {
                       navigateReplacement(
                           context: context, screen: ShopLoginScreen());
                     } else {
                       _pageController.nextPage(
-                        duration: Duration(
-                          milliseconds: 750,
-                        ),
+                        duration: Duration(milliseconds: 720),
                         curve: Curves.fastLinearToSlowEaseIn,
                       );
                     }
                   },
-                  child: Icon(
-                    Icons.arrow_forward_ios,
+                  label: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text(
+                      'Next',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 17.0,
+                      ),
+                    ),
                   ),
                 ),
               ],
-            ),
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget buildBoardingItem({
-    required BoardingModel model,
+  Widget _buildIndicator() {
+    return SmoothPageIndicator(
+      controller: _pageController,
+      count: itemData.length,
+      effect: ExpandingDotsEffect(
+        dotHeight: 10.0,
+        dotWidth: 10.0,
+        dotColor: Colors.grey,
+        activeDotColor: defaultColor,
+      ),
+    );
+  }
+
+  Widget _buildItemDesign({
+    required BuildContext context,
+    required BoardingModel dataModel,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Image.asset(
-            '${model.image}',
+        Image(
+          image: AssetImage(
+            '${dataModel.image}',
           ),
         ),
         SizedBox(
           height: 30.0,
         ),
         Text(
-          '${model.title}',
+          '${dataModel.title}',
           style: TextStyle(
-            fontSize: 24.0,
+            fontSize: 25.0,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF000000),
+            fontStyle: FontStyle.normal,
+            color: Colors.black,
           ),
         ),
         SizedBox(
-          height: 15.0,
+          height: 10.0,
         ),
         Text(
-          '${model.body}',
+          '${dataModel.body}',
           style: TextStyle(
-            fontSize: 14.0,
+            fontSize: 15.0,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF000000),
+            fontStyle: FontStyle.normal,
+            color: Colors.black,
           ),
         ),
-        SizedBox(
-          height: 30.0,
-        ),
-        //   PageView.builder(
-        //   itemBuilder: (BuildContext context, int index) {},
-        // ),
       ],
     );
   }

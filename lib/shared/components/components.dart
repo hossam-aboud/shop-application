@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/modules/news_app/web_view/web_view_screen.dart';
 import 'package:news_app/shared/cubit/cubit.dart';
+import 'package:news_app/shared/styles/color.dart';
 
 Widget buildDividerShared() {
   return Container(
@@ -89,17 +91,21 @@ Widget defaultFormField({
   required String? Function(String?) validate,
   void Function(String)? onChanged,
   void Function()? onTapFunction,
-  double radius = 12,
+  void Function()? suffixPressed,
+  void Function(String)? onSubmit,
+  IconData? suffix,
+  double radius = 8,
   bool isSecureText = false,
 }) {
   return TextFormField(
     style: TextStyle(
-      color: ThemeCubit.get(context).isDark ? Colors.white : Colors.black,
+      color: !ThemeCubit.get(context).isDark ? Colors.white : Colors.black,
       fontSize: 20.0,
       fontWeight: FontWeight.bold,
       fontStyle: FontStyle.normal,
     ),
     onTap: onTapFunction,
+    onFieldSubmitted: onSubmit,
     onChanged: (String value) {
       onChanged!(value);
     },
@@ -108,6 +114,10 @@ Widget defaultFormField({
     obscureText: isSecureText,
     keyboardType: type,
     decoration: InputDecoration(
+      suffixIcon: IconButton(
+        icon: Icon(suffix),
+        onPressed: suffixPressed,
+      ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(
@@ -118,6 +128,54 @@ Widget defaultFormField({
       ),
       labelText: label,
       prefixIcon: Icon(prefix),
+    ),
+  );
+}
+
+Widget defaultBuildButton({
+  required String labelText,
+  required void Function()? onPressed,
+  bool isUpperCase = false,
+}) {
+  return Container(
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color: defaultColor,
+      borderRadius: BorderRadius.all(
+        Radius.circular(
+          3.0,
+        ),
+      ),
+    ),
+    child: ElevatedButton(
+      onPressed: onPressed,
+      child: Text(
+        isUpperCase ? labelText.toUpperCase() : labelText.toLowerCase(),
+      ),
+      style: ButtonStyle(
+        textStyle: MaterialStateProperty.all<TextStyle>(
+          TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 19.0,
+            fontStyle: FontStyle.normal,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget defaultTextButton({
+  required void Function()? onPressed,
+  required String labelText,
+  TextStyle? style,
+}) {
+  return TextButton(
+    onPressed: onPressed,
+    child: Text(
+      labelText.toUpperCase().toString(),
+      style: style,
     ),
   );
 }
