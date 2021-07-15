@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app/modules/shop_app/login/cubit/cubit.dart';
 import 'package:news_app/modules/shop_app/login/cubit/states.dart';
 import 'package:news_app/modules/shop_app/register/shop_register_screen.dart';
@@ -17,8 +18,32 @@ class ShopLoginScreen extends StatelessWidget {
       },
       child: BlocConsumer<ShopLoginCubit, ShopLoginStates>(
         listener: (BuildContext context, ShopLoginStates state) {
-          if (state is ShopLoginErrorState) {
-            print(state.error.toString());
+          if (state is ShopLoginSuccessState) {
+            if (state.loginModel.status == true) {
+              print(state.loginModel.message);
+              print(state.loginModel.data!.email);
+              print(state.loginModel.status);
+              Fluttertoast.showToast(
+                msg: state.loginModel.message,
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 5,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              );
+            } else {
+              print(state.loginModel.message);
+              Fluttertoast.showToast(
+                msg: state.loginModel.message,
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 5,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              );
+            }
           }
         },
         builder: (BuildContext context, ShopLoginStates state) {
@@ -82,7 +107,9 @@ class ShopLoginScreen extends StatelessWidget {
                             onTapFunction: () {},
                             onSubmit: (String value) {
                               if (_formState.currentState!.validate()) {
+                                FocusScope.of(context).unfocus();
                                 cubitLogin.getData(
+                                  context: context,
                                   emailAddress: _emailController.text,
                                   password: _passwordController.text,
                                 );
@@ -115,7 +142,9 @@ class ShopLoginScreen extends StatelessWidget {
                                       onPressed: () {
                                         if (_formState.currentState!
                                             .validate()) {
+                                          FocusScope.of(context).unfocus();
                                           cubitLogin.getData(
+                                            context: context,
                                             emailAddress: _emailController.text,
                                             password: _passwordController.text,
                                           );

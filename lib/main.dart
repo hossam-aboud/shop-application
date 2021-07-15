@@ -7,9 +7,11 @@ import 'package:news_app/shared/cubit/states.dart';
 import 'package:news_app/shared/networks/local/cache_helper.dart';
 import 'package:news_app/shared/networks/remote/dio_helper.dart';
 import 'package:news_app/shared/styles/themes.dart';
+import 'package:news_app/shared/tracking_blocs/tracking_blocs.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = SimpleBlocObserver();
   DioHelper.init();
   await CacheHelper.init();
   bool? isDarkApp = CacheHelper.getBoolean(key: 'isDark');

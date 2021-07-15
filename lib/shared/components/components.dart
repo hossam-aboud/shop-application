@@ -4,6 +4,22 @@ import 'package:news_app/modules/news_app/web_view/web_view_screen.dart';
 import 'package:news_app/shared/cubit/cubit.dart';
 import 'package:news_app/shared/styles/color.dart';
 
+void buildAlertDialog({
+  required BuildContext context,
+  required Widget titleWidget,
+  required Widget contentWidget,
+}) {
+  final AlertDialog alert = AlertDialog(
+    title: titleWidget,
+    content: contentWidget,
+  );
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      });
+}
+
 Widget buildDividerShared() {
   return Container(
     height: 1.0,
@@ -153,6 +169,7 @@ Widget defaultBuildButton({
         isUpperCase ? labelText.toUpperCase() : labelText.toLowerCase(),
       ),
       style: ButtonStyle(
+        elevation: MaterialStateProperty.all<double>(0.0),
         textStyle: MaterialStateProperty.all<TextStyle>(
           TextStyle(
             color: Colors.white,

@@ -45,7 +45,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            SizedBox(height: 40.0,),
             Expanded(
               child: PageView.builder(
                 onPageChanged: (int index) {
@@ -127,6 +126,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image(
           image: AssetImage(
