@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/model/boarding_model.dart';
 import 'package:news_app/modules/shop_app/login/shop_login_screen.dart';
 import 'package:news_app/shared/components/components.dart';
+import 'package:news_app/shared/networks/local/cache_helper.dart';
 import 'package:news_app/shared/styles/color.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -28,10 +29,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         actions: [
           defaultTextButton(
             onPressed: () {
-              navigateReplacement(
-                context: context,
-                screen: ShopLoginScreen(),
-              );
+              submit();
             },
             labelText: 'SKIP',
             style: TextStyle(
@@ -78,8 +76,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 FloatingActionButton.extended(
                   onPressed: () {
                     if (isLast) {
-                      navigateReplacement(
-                          context: context, screen: ShopLoginScreen());
+                      submit();
                     } else {
                       _pageController.nextPage(
                         duration: Duration(milliseconds: 720),
@@ -105,6 +102,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         ),
       ),
     );
+  }
+
+  void submit() {
+    CacheHelper.saveData(key: 'onBoarding', value: true).then((value) {
+      if (value) {
+        print(value.toString());
+        navigateReplacement(
+          context: context,
+          screen: ShopLoginScreen(),
+        );
+      }
+    }).catchError((error) {});
   }
 
   Widget _buildIndicator() {

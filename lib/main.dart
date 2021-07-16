@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/layouts/news_app/cubit/cubit.dart';
+import 'package:news_app/modules/shop_app/login/shop_login_screen.dart';
 import 'package:news_app/modules/shop_app/on_boarding/on_boarding_screen.dart';
 import 'package:news_app/shared/cubit/cubit.dart';
 import 'package:news_app/shared/cubit/states.dart';
@@ -15,15 +16,19 @@ void main() async {
   DioHelper.init();
   await CacheHelper.init();
   bool? isDarkApp = CacheHelper.getBoolean(key: 'isDark');
+  bool onBoarding = CacheHelper.getSaveData(key: 'onBoarding') ?? false;
+  print(onBoarding);
   runApp(MyApp(
     isDarkApplication: isDarkApp,
+    onBoardingSkipped: onBoarding,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final bool? isDarkApplication;
+  final bool onBoardingSkipped;
 
-  MyApp({required this.isDarkApplication});
+  MyApp({required this.isDarkApplication, required this.onBoardingSkipped});
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -50,8 +55,7 @@ class MyApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: themeCubit.isDark ? ThemeMode.light : ThemeMode.dark,
-            home: Directionality(
-                textDirection: TextDirection.ltr, child: OnBoardingScreen()),
+            home: onBoardingSkipped ? ShopLoginScreen() : OnBoardingScreen(),
           );
         },
       ),

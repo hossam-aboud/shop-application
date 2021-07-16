@@ -1,8 +1,46 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app/modules/news_app/web_view/web_view_screen.dart';
 import 'package:news_app/shared/cubit/cubit.dart';
 import 'package:news_app/shared/styles/color.dart';
+
+enum ToastStates { SUCCESS, ERROR, WARNING }
+void toast({
+  required String messageToast,
+  required ToastStates state,
+  Color textColor = Colors.white,
+  double textSize = 16.0,
+  ToastGravity gravity = ToastGravity.BOTTOM,
+  Toast toastLength = Toast.LENGTH_LONG,
+  int timeIOSWeb = 5,
+}) {
+  Fluttertoast.showToast(
+    msg: messageToast,
+    toastLength: toastLength,
+    gravity: gravity,
+    timeInSecForIosWeb: timeIOSWeb,
+    backgroundColor: chooseToastColor(state),
+    textColor: textColor,
+    fontSize: textSize,
+  );
+}
+
+Color chooseToastColor(ToastStates state) {
+  late Color color;
+  switch (state) {
+    case ToastStates.SUCCESS:
+      color = Colors.green;
+      break;
+    case ToastStates.ERROR:
+      color = Colors.red;
+      break;
+    case ToastStates.WARNING:
+      color = Colors.yellow;
+      break;
+  }
+  return color;
+}
 
 void buildAlertDialog({
   required BuildContext context,
