@@ -4,7 +4,7 @@ import 'package:news_app/layouts/news_app/cubit/cubit.dart';
 import 'package:news_app/layouts/news_app/cubit/states.dart';
 import 'package:news_app/shared/components/components.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchNewsScreen extends StatelessWidget {
   var searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {

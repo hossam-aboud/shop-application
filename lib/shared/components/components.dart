@@ -6,7 +6,7 @@ import 'package:news_app/shared/cubit/cubit.dart';
 import 'package:news_app/shared/styles/color.dart';
 
 enum ToastStates { SUCCESS, ERROR, WARNING }
-void toast({
+void showToast({
   required String messageToast,
   required ToastStates state,
   Color textColor = Colors.white,
@@ -266,4 +266,11 @@ Widget articleBuilder({
     },
     itemCount: list.length,
   );
+}
+
+// print full text
+
+void printFullText(String text) {
+  final pattern = RegExp('.{1,800}');
+  pattern.allMatches(text).forEach((match) => print(match.group(0)));
 }

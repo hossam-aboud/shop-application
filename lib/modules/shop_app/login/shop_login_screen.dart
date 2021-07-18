@@ -27,7 +27,7 @@ class ShopLoginScreen extends StatelessWidget {
                 navigateReplacement(context: context, screen: ShopLayout());
               }).catchError((error) {});
             } else {
-              toast(
+              showToast(
                 messageToast: state.loginModel.message,
                 state: ToastStates.ERROR,
               );
@@ -94,8 +94,8 @@ class ShopLoginScreen extends StatelessWidget {
                             onChanged: (value) {},
                             onTapFunction: () {},
                             onSubmit: (String value) {
+                              FocusScope.of(context).unfocus();
                               if (_formState.currentState!.validate()) {
-                                FocusScope.of(context).unfocus();
                                 cubitLogin.getData(
                                   context: context,
                                   emailAddress: _emailController.text,

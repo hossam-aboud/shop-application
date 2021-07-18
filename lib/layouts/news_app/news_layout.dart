@@ -27,7 +27,7 @@ class NewsApplication extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.search),
                 onPressed: () {
-                  navigateTo(context: context, screen: SearchScreen());
+                  navigateTo(context: context, screen: SearchNewsScreen());
                 },
               ),
               IconButton(

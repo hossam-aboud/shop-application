@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/layouts/news_app/cubit/cubit.dart';
+import 'package:news_app/layouts/shop_app/cubit/cubit.dart';
+import 'package:news_app/layouts/shop_app/shop_layout.dart';
 import 'package:news_app/modules/shop_app/login/shop_login_screen.dart';
 import 'package:news_app/modules/shop_app/on_boarding/on_boarding_screen.dart';
+import 'package:news_app/shared/components/constants.dart';
 import 'package:news_app/shared/cubit/cubit.dart';
 import 'package:news_app/shared/cubit/states.dart';
 import 'package:news_app/shared/networks/local/cache_helper.dart';
@@ -17,18 +20,27 @@ void main() async {
   await CacheHelper.init();
   bool? isDarkApp = CacheHelper.getBoolean(key: 'isDark');
   bool onBoarding = CacheHelper.getSaveData(key: 'onBoarding') ?? false;
-  print(onBoarding);
+  token = CacheHelper.getSaveData(key: 'token') ?? null;
+  late Widget widget;
+
+  if (onBoarding != false) if (token != null)
+    widget = ShopLayout();
+  else
+    widget = ShopLoginScreen();
+  else
+    widget = OnBoardingScreen();
+
   runApp(MyApp(
     isDarkApplication: isDarkApp,
-    onBoardingSkipped: onBoarding,
+    startWidget: widget,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final bool? isDarkApplication;
-  final bool onBoardingSkipped;
+  final Widget startWidget;
 
-  MyApp({required this.isDarkApplication, required this.onBoardingSkipped});
+  MyApp({required this.isDarkApplication, required this.startWidget});
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -43,7 +55,12 @@ class MyApp extends StatelessWidget {
             return ThemeCubit()
               ..changeModeApplication(isDarkFromSharedPref: isDarkApplication);
           },
-        )
+        ),
+        BlocProvider(
+          create: (BuildContext context) {
+            return ShopCubit()..getHomeData();
+          },
+        ),
       ],
       child: BlocConsumer<ThemeCubit, ThemeStates>(
         listener: (BuildContext context, ThemeStates state) {},
@@ -55,7 +72,7 @@ class MyApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: themeCubit.isDark ? ThemeMode.light : ThemeMode.dark,
-            home: onBoardingSkipped ? ShopLoginScreen() : OnBoardingScreen(),
+            home: startWidget,
           );
         },
       ),
