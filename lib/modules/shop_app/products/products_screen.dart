@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/layouts/shop_app/cubit/cubit.dart';
 import 'package:news_app/layouts/shop_app/cubit/states.dart';
+import 'package:news_app/model/shop_app/categories_model.dart';
 import 'package:news_app/model/shop_app/home_model.dart';
 import 'package:news_app/shared/styles/color.dart';
 
@@ -15,8 +16,11 @@ class ProductsScreen extends StatelessWidget {
       builder: (BuildContext context, ShopStates state) {
         ShopCubit cubit = ShopCubit.get(context);
         // List<Widget> productsPhotos = cubit.homeModel.data.banners.map((e){} );
-        return cubit.homeModel != null
-            ? productsBuilder(cubit.homeModel!)
+        return cubit.homeModel != null && cubit.categoriesModel != null
+            ? productsBuilder(
+                model: cubit.homeModel!,
+                categoriesModel: cubit.categoriesModel!,
+              )
             : Center(
                 child: CircularProgressIndicator(),
               );
@@ -24,10 +28,14 @@ class ProductsScreen extends StatelessWidget {
     );
   }
 
-  Widget productsBuilder(HomeModel model) {
+  Widget productsBuilder({
+    required HomeModel model,
+    required CategoriesModel categoriesModel,
+  }) {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CarouselSlider(
             items: model.data.banners
@@ -55,6 +63,54 @@ class ProductsScreen extends StatelessWidget {
           SizedBox(
             height: 10.0,
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Categories',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Container(
+                  height: 100.0,
+                  child: ListView.separated(
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return buildCategoryItem(
+                          categoriesModel.data.dataModel[index]);
+                    },
+                    separatorBuilder: (context, index) => SizedBox(
+                      width: 10.0,
+                    ),
+                    itemCount: categoriesModel.data.dataModel.length,
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                  'New Products',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
           Container(
             color: Colors.grey[300],
             child: GridView.count(
@@ -70,6 +126,39 @@ class ProductsScreen extends StatelessWidget {
                 (index) {
                   return buildGridProducts(model.data.products[index]);
                 },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildCategoryItem(DataModel model) {
+    return Container(
+      height: 100.0,
+      width: 100.0,
+      child: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          Image(
+            image: NetworkImage('${model.image}'),
+            height: 100.0,
+            width: 100.0,
+            fit: BoxFit.cover,
+          ),
+          Container(
+            width: double.infinity,
+            color: Colors.black.withOpacity(
+              .8,
+            ),
+            child: Text(
+              '${model.name}',
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.white,
               ),
             ),
           ),

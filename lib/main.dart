@@ -58,7 +58,10 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (BuildContext context) {
-            return ShopCubit()..getHomeData();
+            // cascade
+            return ShopCubit()
+              ..getHomeData()
+              ..getCategoriesData();
           },
         ),
       ],
